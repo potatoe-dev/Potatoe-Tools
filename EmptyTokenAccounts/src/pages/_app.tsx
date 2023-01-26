@@ -14,16 +14,26 @@ import { clusterApiUrl } from '@solana/web3.js';
 import type { AppProps } from 'next/app';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
+import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react'
+// `@chakra-ui/theme` is a part of the base install with `@chakra-ui/react`
+import chakraTheme from '@chakra-ui/theme'
+
+const { Container, Button,Table,Heading  } = chakraTheme.components
+
+const theme = extendBaseTheme({
+  components: {
+    Container, Button,Table,Heading 
+  },
+})
 
 // Use require instead of import since order matters
 require('@solana/wallet-adapter-react-ui/styles.css');
 require('../styles/globals.css');
 
+
 const App: FC<AppProps> = ({ Component, pageProps }) => {
     // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
-    console.log("WalletAdapterNetwork",WalletAdapterNetwork)
     const network = WalletAdapterNetwork.Mainnet;
-    console.log("network",network)
     // You can also provide a custom RPC endpoint
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
@@ -90,13 +100,15 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     );
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
-                <WalletModalProvider>
-                    <Component {...pageProps} />
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+        <ChakraBaseProvider theme={theme}>
+            <ConnectionProvider endpoint={endpoint}>
+                <WalletProvider wallets={wallets} autoConnect>
+                    <WalletModalProvider>
+                        <Component {...pageProps} />
+                    </WalletModalProvider>
+                </WalletProvider>
+            </ConnectionProvider>
+        </ChakraBaseProvider>
     );
 };
 

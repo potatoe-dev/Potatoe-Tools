@@ -1,23 +1,10 @@
 import type { NextPage } from 'next';
-import { Button,Text } from '@chakra-ui/react'
-import dynamic from 'next/dynamic';
-import Head from 'next/head';
-import Image from 'next/image';
+import { Box,Container, VStack,Button,Text,Heading,TableContainer,Table,Tbody,Thead,Tfoot,Tr,Th, Td,TableCaption } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react';
-import styles from '../styles/Home.module.css';
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import {getAccountInfo,closeAccounts} from '../utils'
-import * as anchor from "@project-serum/anchor";
 
-const WalletDisconnectButtonDynamic = dynamic(
-    async () => (await import('@solana/wallet-adapter-react-ui')).WalletDisconnectButton,
-    { ssr: false }
-);
-const WalletMultiButtonDynamic = dynamic(
-    async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
-    { ssr: false }
-);
 
 const Home: NextPage = () => {
     const {publicKey,sendTransaction} = useWallet();
@@ -42,17 +29,60 @@ const Home: NextPage = () => {
         }
     }
 
+    const closeSingleAccountsButton = (pubkey:string) => {
+        if(publicKey){
+            closeAccounts(publicKey,[{pubkey:pubkey,mint:""}],sendTransaction)
+        }
+    }
+
     return (
         
-        <>
-        <WalletMultiButton />
-        {tokenAccounts.length > 0 ? <Button onClick={(e)=>closeAccountsButton()}> Close {tokenAccounts.length} Accounts</Button>:<></>}
-        {tokenAccounts.length > 0 ? (
-            tokenAccounts.map((tokens) => {
-             return(<Text key = {tokens.pubkey}>TokenAddress: {tokens.pubkey} MintAddress: {tokens.mint}</Text>)
-            })) : <>Not Found</>
-        }
-        </>
+        <Container width = "100%" height = "100%" p="5%" centerContent>
+            <VStack>
+
+                
+                <Heading fontSize='2xl' pt="2%"> Close your unsued Token Accounts for SOL. </Heading>
+                <Text fontSize='lg' >Use this at your own risk! Deleting token accounts may affect 3rd party apps. </Text>
+                <Text fontSize='lg' pb="2%">This is currently completly free service, Potatoe takes none off the top.</Text>
+                
+                <WalletMultiButton />
+
+                {tokenAccounts.length > 0 ? <Button colorScheme='teal' variant='outline' onClick={(e)=>closeAccountsButton()}> Close All {tokenAccounts.length} Accounts</Button>:<Text >No Accounts Found</Text>}
+                
+                {tokenAccounts.length > 0 ? (
+                <TableContainer>
+                    <Table variant='simple'>
+                        <TableCaption>Use at your own risk!</TableCaption>
+                        <Thead>
+                            <Tr>
+                                <Th>Token Account</Th>
+                                <Th>Token Mint</Th>
+                                <Th>Single Close</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                                {tokenAccounts.map((tokens) => {
+                                return(
+                                    <Tr key={tokens.pubkey}>
+                                        <Td> {tokens.pubkey}</Td>
+                                        <Td>{tokens.mint}</Td>
+                                        <Td><Button colorScheme='teal' variant='outline' onClick = {(e)=> closeSingleAccountsButton(tokens.pubkey)}> Close </Button></Td>
+                                    </Tr>
+                                    )})}
+                        </Tbody>
+                        <Tfoot>
+                            <Tr>
+                                <Th>Token Account</Th>
+                                <Th>Token Mint</Th>
+                                <Th>Single Close</Th>
+                            </Tr>
+                        </Tfoot>
+                    </Table>
+                </TableContainer>
+                ) : <></>
+            }
+            </VStack>
+        </Container >
     );
 };
 

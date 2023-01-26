@@ -1,3 +1,4 @@
+import { e } from "@chakra-ui/toast/dist/toast.types-76829e6b";
 import * as anchor from "@project-serum/anchor";
 import { TOKEN_PROGRAM_ID,createCloseAccountInstruction  } from "@solana/spl-token";
 
@@ -33,9 +34,8 @@ export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[],
 		const batchsize = 20
 		
 		let tx = new anchor.web3.Transaction()
-		let j=0
-		for(let i=0; i<tokens.length;i++){
-			if(j < batchsize){
+		let j=1
+		for(let i=0; i<tokens.length;i++){	
 			tx.add(
 				createCloseAccountInstruction(
 					new anchor.web3.PublicKey(tokens[i].pubkey), // token account which you want to close
@@ -43,12 +43,12 @@ export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[],
 					wallet // owner of token account
 				  )
 			)
-			j++
-			}else{
+			if(j == batchsize || i == tokens.length-1){
 				const signature = await sendTransaction(tx, connection);
 				tx = new anchor.web3.Transaction()
 				j=0
 			}
+				j++		
 		}
 		
 		return(tokens)	
