@@ -53,11 +53,12 @@ const Home: NextPage = () => {
         <Container width = "100%" height = "100%" p="5%" centerContent>
             <VStack>
 
-                
                 <Heading fontSize='2xl' pt="2%"> Close your unsued Token Accounts for SOL. </Heading>
                 <Text fontSize='lg' >Use this at your own risk! Deleting token accounts may affect 3rd party apps. </Text>
-                <Text fontSize='lg' pb="2%">This is currently completly free service, Potatoe takes none off the top.</Text>
-                
+                <Text fontSize='lg' pb="2%">This is currently completly free service, Potatoe takes none off the top.</Text>            
+                <Text fontSize='lg' pb="2%">Although feel free to send a tip: GXy1KcScRMfyZFcAM37GYiDYJfb8db6pqZ4ARKgMp2R.</Text>
+
+
                 <WalletMultiButton />
 
                 {load ? <Spinner size="lg"></Spinner> :
