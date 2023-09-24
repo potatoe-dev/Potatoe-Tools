@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { Box,Container, VStack,Button,Text,Heading,TableContainer,Table,Tbody,Thead,Tfoot,Tr,Th, Td,TableCaption } from '@chakra-ui/react'
+import { Spinner,Box,Container, VStack,Button,Text,Heading,TableContainer,Table,Tbody,Thead,Tfoot,Tr,Th, Td,TableCaption } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react';
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
@@ -9,6 +9,7 @@ import {getAccountInfo,closeAccounts} from '../utils'
 const Home: NextPage = () => {
     const {publicKey,sendTransaction, signAllTransactions} = useWallet();
     const [tokenAccounts, setTokenAccounts] = useState<any[]>([])
+    const [load, setLoad] = useState<boolean>(false)
 
     useEffect(() => {
 		if(publicKey){
@@ -25,13 +26,25 @@ const Home: NextPage = () => {
 
     const closeAccountsButton = () => {
         if(publicKey){
-            closeAccounts(publicKey,tokenAccounts,signAllTransactions)
+            try{
+                setLoad(true)
+                closeAccounts(publicKey,tokenAccounts,signAllTransactions,setLoad)
+            }catch(e){
+                console.log(e)
+                setLoad(false)
+            }
         }
     }
 
     const closeSingleAccountsButton = (pubkey:string) => {
         if(publicKey){
-            closeAccounts(publicKey,[{pubkey:pubkey,mint:""}],signAllTransactions)
+            try{
+                setLoad(true)
+                closeAccounts(publicKey,[{pubkey:pubkey,mint:""}],signAllTransactions,setLoad)
+            }catch(e){
+                console.log(e)
+                setLoad(false)
+            }
         }
     }
 
@@ -47,6 +60,8 @@ const Home: NextPage = () => {
                 
                 <WalletMultiButton />
 
+                {load ? <Spinner size="lg"></Spinner> :
+                <>
                 {tokenAccounts.length > 0 ? <Button colorScheme='teal' variant='outline' onClick={(e)=>closeAccountsButton()}> Close All {tokenAccounts.length} Accounts</Button>:<Text >No Accounts Found</Text>}
                 
                 {tokenAccounts.length > 0 ? (
@@ -81,6 +96,7 @@ const Home: NextPage = () => {
                 </TableContainer>
                 ) : <></>
             }
+            </>}
             </VStack>
         </Container >
     );

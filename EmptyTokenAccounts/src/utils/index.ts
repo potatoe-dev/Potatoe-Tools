@@ -25,10 +25,9 @@ export const getAccountInfo = async (wallet: anchor.web3.PublicKey) => {
 	}
 }
 
-export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[], sendTransaction: any) => {
+export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[], sendTransaction: any,setLoad:any) => {
 	try {
-		console.log("IN CLOSE ACCOUNT REAL FUNS",tokens.length)
-		
+
 		const RPC = process.env.NEXT_PUBLIC_SOLANA_RPC!
 		const connection = new anchor.web3.Connection(RPC)
 		const batchsize = 20
@@ -54,23 +53,26 @@ export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[],
 				tx = new anchor.web3.Transaction({feePayer: wallet,recentBlockhash: bh.blockhash})
 				j=0
 			}
-			if(k==batchsize2){
-				console.log("batches",batches)
+			if(k==batchsize2 || i == tokens.length-1){
 				k=0
 				const tx2 = await sendTransaction(batches)
 				//const sig = await connectionSolana.sendTransaction(t)
 				for(let t of tx2){
 				  //@ts-ignore
-				  const sig = await connection.sendTransaction(t)
+				  const sig = await connection.sendRawTransaction(t.serialize())
 				  console.log("sig",sig)
 				}
 				batches=[]
 			}
 				j++		
 		}
+		setLoad(false)
+		alert("Success")
+		return(tokens)
 		
-		return(tokens)	
 	} catch (error) {
+		setLoad(false)
+		alert("Error")
 		console.log(error)
 		return([])
 	}
