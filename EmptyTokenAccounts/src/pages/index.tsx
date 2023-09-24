@@ -7,12 +7,12 @@ import {getAccountInfo,closeAccounts} from '../utils'
 
 
 const Home: NextPage = () => {
-    const {publicKey,sendTransaction} = useWallet();
+    const {publicKey,sendTransaction, signAllTransactions} = useWallet();
     const [tokenAccounts, setTokenAccounts] = useState<any[]>([])
 
     useEffect(() => {
 		if(publicKey){
-           console.log("tokenAccounts",tokenAccounts)
+           //console.log("tokenAccounts",tokenAccounts)
             const getTokens= async() =>{ 
                 let tokens = await getAccountInfo(publicKey)
                 if(tokens){
@@ -25,13 +25,13 @@ const Home: NextPage = () => {
 
     const closeAccountsButton = () => {
         if(publicKey){
-            closeAccounts(publicKey,tokenAccounts,sendTransaction)
+            closeAccounts(publicKey,tokenAccounts,signAllTransactions)
         }
     }
 
     const closeSingleAccountsButton = (pubkey:string) => {
         if(publicKey){
-            closeAccounts(publicKey,[{pubkey:pubkey,mint:""}],sendTransaction)
+            closeAccounts(publicKey,[{pubkey:pubkey,mint:""}],signAllTransactions)
         }
     }
 

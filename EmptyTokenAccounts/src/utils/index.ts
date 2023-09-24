@@ -27,14 +27,17 @@ export const getAccountInfo = async (wallet: anchor.web3.PublicKey) => {
 
 export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[], sendTransaction: any) => {
 	try {
-		console.log("IN CLOSE ACCOUNT REAL FUN")
+		console.log("IN CLOSE ACCOUNT REAL FUNS",tokens.length)
 		
 		const RPC = process.env.NEXT_PUBLIC_SOLANA_RPC!
 		const connection = new anchor.web3.Connection(RPC)
 		const batchsize = 20
-		
-		let tx = new anchor.web3.Transaction()
+		const batchsize2 = 11
+		let batches = []
+		let bh = await connection.getLatestBlockhash()
+		let tx = new anchor.web3.Transaction({ feePayer: wallet,recentBlockhash: bh.blockhash})
 		let j=1
+		let k=1
 		for(let i=0; i<tokens.length;i++){	
 			tx.add(
 				createCloseAccountInstruction(
@@ -44,9 +47,24 @@ export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[],
 				  )
 			)
 			if(j == batchsize || i == tokens.length-1){
-				const signature = await sendTransaction(tx, connection);
-				tx = new anchor.web3.Transaction()
+				k=k+1
+				batches.push(tx)
+				//const signature = await sendTransaction(tx, connection);
+				bh = await connection.getLatestBlockhash()
+				tx = new anchor.web3.Transaction({feePayer: wallet,recentBlockhash: bh.blockhash})
 				j=0
+			}
+			if(k==batchsize2){
+				console.log("batches",batches)
+				k=0
+				const tx2 = await sendTransaction(batches)
+				//const sig = await connectionSolana.sendTransaction(t)
+				for(let t of tx2){
+				  //@ts-ignore
+				  const sig = await connection.sendTransaction(t)
+				  console.log("sig",sig)
+				}
+				batches=[]
 			}
 				j++		
 		}
