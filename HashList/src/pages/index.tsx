@@ -269,7 +269,17 @@ const Home: NextPage = () => {
 
                     <Text color="white">Total: {mintAccounts.length}</Text> 
                     <Text color="white">Processed: {countJson}</Text> 
-                    <Text color="white">Found: {final.length}</Text>
+                    <Text color="white" pb="20px">Found: {final.length}</Text>
+
+                    {entry.map((ent:any) => {
+                                return(
+                                    <VStack key={ent.Index}>
+                                        <Text color="white" >Trait: {ent.Trait}</Text> 
+                                        <Text color="white" >Value: {ent.Value}</Text> 
+                                        <Divider/>                                                   
+                                    </VStack>
+                                    )})}
+                    <Text color="white" pt="20px" pb="20px">Junction: {junction}</Text>
 
                     {holderFlag == "2" ? <Text size="lg" color="red">THESE ARE MINTS NOT HOLDERS</Text> : <></>}
                     <Button  onClick={downloadJson}>Download</Button>            
