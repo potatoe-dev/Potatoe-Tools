@@ -271,7 +271,7 @@ const Home: NextPage = () => {
                     <Text color="white">Processed: {countJson}</Text> 
                     <Text color="white">Found: {final.length}</Text>
 
-                    {holderFlag == "2" ? <Text size="lg" color="white">THESE ARE MINTS NOT HOLDERS</Text> : <></>}
+                    {holderFlag == "2" ? <Text size="lg" color="red">THESE ARE MINTS NOT HOLDERS</Text> : <></>}
                     <Button  onClick={downloadJson}>Download</Button>            
                 </VStack>
             
