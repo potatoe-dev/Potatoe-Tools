@@ -69,8 +69,7 @@ const Home: NextPage = () => {
         setLoad("loading")
         let i = 1
         let rez = []
-        for(const mint of mintAccounts){
-            setcountJson(i)
+        for(const mint of mintAccounts){      
             let mintPub = new anchor.web3.PublicKey(mint)
             const nftMeta = await metaplex.nfts().findByMint({ mintAddress: mintPub });
 
@@ -130,7 +129,7 @@ const Home: NextPage = () => {
             }else{
                 alert("NFT Meta Did Not Load For: " + mint)
             }
-
+            setcountJson(i)
             i=i+1
         }
 
