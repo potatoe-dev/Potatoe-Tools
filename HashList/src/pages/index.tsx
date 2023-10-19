@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 
     const handleFileEvent =  (e:any) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files)
-        console.log("chosenFiles",chosenFiles)
+        
         handleUploadFiles(chosenFiles[0]);
     }
 
@@ -53,7 +53,7 @@ const Home: NextPage = () => {
         const fileReader = new FileReader();
         fileReader.readAsText(files, "UTF-8");
 		fileReader.onload = async e => {
-            console.log("e",e.target)
+            
 			if(e.target){
                 if(e.target.result){
                     //@ts-ignore
@@ -79,7 +79,7 @@ const Home: NextPage = () => {
                     let flag = true
                     for(const ent of entry){
                         let meta = nftMeta.json.attributes!.find((att:any) => att.trait_type == ent.Trait)
-                        console.log("meta",meta)
+                        
                         if(meta?.value != ent.Value){              
                                 flag = false       
                         }
@@ -126,7 +126,7 @@ const Home: NextPage = () => {
                         }
                     }                    
                 }
-                console.log("rez",rez)
+               
             }else{
                 alert("NFT Meta Did Not Load For: " + mint)
             }
@@ -139,7 +139,6 @@ const Home: NextPage = () => {
     }
 
     const downloadJson =  () => {
-        console.log("start",final)
         let finalOut:any = final
         if(outSetting == "Single"){
             let finalString = "[\n"
@@ -174,7 +173,7 @@ const Home: NextPage = () => {
             finalString = finalString.slice(0, -2) + "\n]"
             finalOut= finalString 
         }
-        console.log("finalOut",finalOut)  
+    
         var blob = new Blob([finalOut], {type: "text/plain;charset=utf-8"});
         FileSaver.saveAs(blob, "hash.txt");
     }
@@ -271,6 +270,8 @@ const Home: NextPage = () => {
                     <Text color="white">Total: {mintAccounts.length}</Text> 
                     <Text color="white">Processed: {countJson}</Text> 
                     <Text color="white">Found: {final.length}</Text>
+
+                    {holderFlag == "2" ? <Text size="lg" color="white">THESE ARE MINTS NOT HOLDERS</Text> : <></>}
                     <Button  onClick={downloadJson}>Download</Button>            
                 </VStack>
             
