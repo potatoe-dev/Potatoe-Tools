@@ -95,8 +95,14 @@ const Home: NextPage = () => {
                             //@ts-ignore
                             rez.push(largestAccountInfo.value.data.parsed.info.owner)
                             setFinal(rez)
-                        }else{
+                        }else if(holderFlag == "2"){
                             rez.push(mint)
+                            setFinal(rez)
+                        }else if(holderFlag == "3"){
+                            rez.push(nftMeta.name)
+                            setFinal(rez)
+                        }else if(holderFlag == "4"){
+                            rez.push(nftMeta)
                             setFinal(rez)
                         }
                     }
@@ -119,8 +125,14 @@ const Home: NextPage = () => {
                             //@ts-ignore
                             rez.push(largestAccountInfo.value.data.parsed.info.owner)
                             setFinal(rez)
-                        }else{
+                        }else if(holderFlag == "2"){
                             rez.push(mint)
+                            setFinal(rez)
+                        }else if(holderFlag == "3"){
+                            rez.push(nftMeta.name)
+                            setFinal(rez)
+                        }else if(holderFlag == "4"){
+                            rez.push(nftMeta)
                             setFinal(rez)
                         }
                     }                    
@@ -142,7 +154,10 @@ const Home: NextPage = () => {
         if(outSetting == "Single"){
             let finalString = "[\n"
             finalOut = finalOut.filter((value:any, index:any, array:any) => array.indexOf(value) === index);  
-            for(const mint of finalOut){
+            for(let mint of finalOut){
+                if(holderFlag == "4"){
+                    mint=JSON.stringify(mint)
+                }
                 finalString = finalString + "'" + mint + "',\n"  
             }
             finalString = finalString.slice(0, -2) + "\n]"
@@ -150,7 +165,10 @@ const Home: NextPage = () => {
         }else if(outSetting == "Count"){
             let count:any = []
             let finalString = "[\n"
-            for(const mint of finalOut){
+            for(let mint of finalOut){
+                if(holderFlag == "4"){
+                    mint=JSON.stringify(mint)
+                }
                 let ind = count.findIndex((c:any) => c.mint == mint)
                 if(ind != -1){
                     count[ind].count = count[ind].count + 1
@@ -165,8 +183,12 @@ const Home: NextPage = () => {
             finalString = finalString.slice(0, -2) + "\n]"
             finalOut = finalString
         }else{
+           
             let finalString = "[\n"
-            for(const mint of finalOut){
+            for(let mint of finalOut){
+                if(holderFlag == "4"){
+                    mint=JSON.stringify(mint)
+                }
                 finalString = finalString + "'" + mint + "',\n"  
             }
             finalString = finalString.slice(0, -2) + "\n]"
@@ -212,6 +234,8 @@ const Home: NextPage = () => {
                     <Stack color="white" direction='row'>
                         <Radio  value='1'>Holders</Radio>
                         <Radio value='2'>Mints</Radio>
+                        <Radio value='3'>Names</Radio>
+                        <Radio value='4'>Full Metadata</Radio>
                     </Stack>
                 </RadioGroup>
 
