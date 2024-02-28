@@ -1,15 +1,7 @@
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { UnsafeBurnerWalletAdapter,AlphaWalletAdapter,AvanaWalletAdapter,BackpackWalletAdapter,
-    BitKeepWalletAdapter,BitpieWalletAdapter,BloctoWalletAdapter,BraveWalletAdapter,BraveWalletAdapterConfig,
-    CloverWalletAdapter,Coin98WalletAdapter, CoinbaseWalletAdapter,CoinhubWalletAdapter,ExodusWalletAdapter,
-    FractalWalletAdapter,GlowWalletAdapter,HuobiWalletAdapter,HyperPayWalletAdapter,KeystoneWalletAdapter,
-    KrystalWalletAdapter,LedgerWalletAdapter,MathWalletAdapter,MathWalletAdapterConfig,NekoWalletAdapter,
-    NightlyWalletAdapter,NufiWalletAdapter,OntoWalletAdapter,ParticleAdapter,PhantomWalletAdapter,SafePalWalletAdapter,
-    SaifuWalletAdapter,SalmonWalletAdapter,SkyWalletAdapter,SlopeWalletAdapter,SolflareWalletAdapter,SolletWalletAdapter,
-    SolongWalletAdapter,SpotWalletAdapter,StrikeWalletAdapter,TokenaryWalletAdapter,TokenPocketWalletAdapter,TorusWalletAdapter,
-    TrustWalletAdapter,WalletConnectWalletAdapter,XDEFIWalletAdapter} from '@solana/wallet-adapter-wallets';
+
 import { clusterApiUrl } from '@solana/web3.js';
 import type { AppProps } from 'next/app';
 import type { FC } from 'react';
@@ -51,49 +43,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
              * instantiate its legacy wallet adapter here. Common legacy adapters can be found
              * in the npm package `@solana/wallet-adapter-wallets`.
              */
-            new AlphaWalletAdapter(),
-            new AvanaWalletAdapter(),
-            new BackpackWalletAdapter(),
-            new BitKeepWalletAdapter(),
-            new BitpieWalletAdapter(),
-            new BloctoWalletAdapter(),
-            new BraveWalletAdapter(),
-            new BraveWalletAdapter(),
-            new CloverWalletAdapter(),
-            new Coin98WalletAdapter(),
-            new  CoinbaseWalletAdapter(),
-            new CoinhubWalletAdapter(),
-            new ExodusWalletAdapter(),
-            new FractalWalletAdapter(),
-            new GlowWalletAdapter(),
-            new HuobiWalletAdapter(),
-            new HyperPayWalletAdapter(),
-            new KeystoneWalletAdapter(),
-            new KrystalWalletAdapter(),
-            new LedgerWalletAdapter(),
-            new MathWalletAdapter(),
-            new MathWalletAdapter(),
-            new NekoWalletAdapter(),
-            new NightlyWalletAdapter(),
-            new NufiWalletAdapter(),
-            new OntoWalletAdapter(),
-            new ParticleAdapter(),
-            new PhantomWalletAdapter(),
-            new SafePalWalletAdapter(),
-            new SaifuWalletAdapter(),
-            new SalmonWalletAdapter(),
-            new SkyWalletAdapter(),
-            new SlopeWalletAdapter(),
-            new SolflareWalletAdapter(),
-            new SolletWalletAdapter(),
-            new SolongWalletAdapter(),
-            new SpotWalletAdapter(),
-            new StrikeWalletAdapter(),
-            new TokenaryWalletAdapter(),
-            new TokenPocketWalletAdapter(),
-            new TorusWalletAdapter(),
-            new TrustWalletAdapter(),
-            new XDEFIWalletAdapter       
+          
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [network]
