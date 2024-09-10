@@ -50,8 +50,8 @@ const Home: NextPage = () => {
 
     return (
         
-        <Container width = "100%" height = "100%" p="5%" centerContent>
-            <VStack>
+        <Container maxWidth = "100%" height = "100%">
+            <VStack width="100%" maxWidth = "100%">
 
                 <Heading fontSize='2xl' pt="2%"> Close your unsued Token Accounts for SOL. </Heading>
                 <Text fontSize='lg' >Use this at your own risk! Deleting token accounts may affect 3rd party apps. </Text>
