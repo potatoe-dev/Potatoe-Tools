@@ -23,10 +23,15 @@ export const getAccountInfo = async (wallet: anchor.web3.PublicKey) => {
 		  });
 
 		for(const token of accountInfo2.value){
-			if(token.account.data.parsed.info.tokenAmount.uiAmount == 0){
-				const mintToken = new anchor.web3.PublicKey(token.account.data.parsed.info.mint)
-				tokens.push({pubkey:token.pubkey.toString(),mint:mintToken.toString(), type:"spl22"})
-			}		
+			let findStuff = token.account.data.parsed.info.extensions.find((ext:any)=>ext.extension=="transferFeeAmount")
+			if(!findStuff){
+				if(token.account.data.parsed.info.tokenAmount.uiAmount == 0){
+					const mintToken = new anchor.web3.PublicKey(token.account.data.parsed.info.mint)
+					tokens.push({pubkey:token.pubkey.toString(),mint:mintToken.toString(), type:"spl22"})
+				}	
+			}else{
+				console.log("findStuff",findStuff)
+			}	
 		}
 		
 		return(tokens)	
@@ -36,17 +41,17 @@ export const getAccountInfo = async (wallet: anchor.web3.PublicKey) => {
 	}
 }
 
-export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[], sendTransaction: any,setLoad:any) => {
+export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[], signAllTransactions: any,setLoad:any) => {
 	try {
 
-		console.log("close")
+		console.log("close",tokens)
 		const RPC = process.env.NEXT_PUBLIC_SOLANA_RPC!
-		const connection = new anchor.web3.Connection(RPC)
-		const batchsize = 20
+		const connection = new anchor.web3.Connection(RPC,"confirmed")
+		const batchsize = 15
 		const batchsize2 = 11
-		let batches = []
-		let bh = await connection.getLatestBlockhash()
-		let tx = new anchor.web3.Transaction({feePayer: wallet,blockhash: bh.blockhash,lastValidBlockHeight: bh.lastValidBlockHeight})			
+		let batches:any = []
+		let ixHold:any = []
+			
 		let j=1
 		let k=1
 		for(let i=0; i<tokens.length;i++){	
@@ -56,8 +61,10 @@ export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[],
 			if(tokens[i].type == "spl22"){
 				splAddress = TOKEN_2022_PROGRAM_ID
 			}
+			console.log("splAddress",splAddress.toString())
+			console.log("tokens[i].pubkey",tokens[i].type)
 
-			tx.add(
+			ixHold.push(
 				createCloseAccountInstruction(
 					new anchor.web3.PublicKey(tokens[i].pubkey), // token account which you want to close
 					wallet, // destination
@@ -66,19 +73,29 @@ export const closeAccounts = async (wallet: anchor.web3.PublicKey,tokens: any[],
 					splAddress
 				  )
 			)
-			console.log("tx",tx)
+
 			if(j == batchsize || i == tokens.length-1){
 				k=k+1
-				batches.push(tx)
-				//const signature = await sendTransaction(tx, connection);
-				bh = await connection.getLatestBlockhash()
-				tx = new anchor.web3.Transaction({feePayer: wallet,blockhash: bh.blockhash,lastValidBlockHeight: bh.lastValidBlockHeight})
+				const {
+					context: { slot: minContextSlot },
+							value: { blockhash, lastValidBlockHeight },
+						  } = await connection.getLatestBlockhashAndContext()
+
+				const messageV0 = new anchor.web3.TransactionMessage({
+					payerKey: wallet,
+					recentBlockhash: blockhash,
+					instructions: ixHold,
+				  }).compileToV0Message()
+		  
+				  const tx1 = new anchor.web3.VersionedTransaction(messageV0)
+				  batches.push(tx1)
+				ixHold=[]
 				j=0
 			}
 			if(k==batchsize2 || i == tokens.length-1){
 				k=0
 				console.log("batches",batches)
-				const tx2 = await sendTransaction(batches,{skipPreflight:true})
+				const tx2 = await signAllTransactions!(batches)
 				//const sig = await connectionSolana.sendTransaction(t)
 				for(let t of tx2){
 				  //@ts-ignore

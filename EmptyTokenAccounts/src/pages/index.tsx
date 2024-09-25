@@ -36,11 +36,11 @@ const Home: NextPage = () => {
         }
     }
 
-    const closeSingleAccountsButton = (pubkey:string) => {
+    const closeSingleAccountsButton = (pubkey:string, type:string) => {
         if(publicKey){
             try{
                 setLoad(true)
-                closeAccounts(publicKey,[{pubkey:pubkey,mint:""}],signAllTransactions,setLoad)
+                closeAccounts(publicKey,[{pubkey:pubkey,mint:"",type:type}],signAllTransactions,setLoad)
             }catch(e){
                 console.log(e)
                 setLoad(false)
@@ -82,7 +82,7 @@ const Home: NextPage = () => {
                                     <Tr key={tokens.pubkey}>
                                         <Td> {tokens.pubkey}</Td>
                                         <Td>{tokens.mint}</Td>
-                                        <Td><Button colorScheme='teal' variant='outline' onClick = {(e)=> closeSingleAccountsButton(tokens.pubkey)}> Close </Button></Td>
+                                        <Td><Button colorScheme='teal' variant='outline' onClick = {(e)=> closeSingleAccountsButton(tokens.pubkey, tokens.type)}> Close </Button></Td>
                                     </Tr>
                                     )})}
                         </Tbody>
