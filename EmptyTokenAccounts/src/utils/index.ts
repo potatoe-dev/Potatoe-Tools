@@ -1,4 +1,3 @@
-import { e } from "@chakra-ui/toast/dist/toast.types-76829e6b";
 import * as anchor from "@project-serum/anchor";
 import { TOKEN_2022_PROGRAM_ID,TOKEN_PROGRAM_ID,createCloseAccountInstruction} from "@solana/spl-token";
 

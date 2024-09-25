@@ -6,9 +6,12 @@ import { clusterApiUrl } from '@solana/web3.js';
 import type { AppProps } from 'next/app';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
-import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react'
 // `@chakra-ui/theme` is a part of the base install with `@chakra-ui/react`
-import chakraTheme from '@chakra-ui/theme'
+import {
+    ChakraBaseProvider,
+    extendBaseTheme,
+    theme as chakraTheme,
+  } from '@chakra-ui/react'
 
 const { Container, Button,Table,Heading,Spinner  } = chakraTheme.components
 
